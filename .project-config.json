@@ -1,0 +1,34 @@
+{
+  "build_command": "pnpm run build",
+  "capabilities": [],
+  "dev_command": "pnpm run dev",
+  "env_vars": {},
+  "experiments": null,
+  "git_remote": {
+    "repo_url": "https://7f0548f6b28a1758d9bf7be630d36cb4.artifacts.cloudflare.net/git/prod/Vejje3J8cVRUFYDzCxwUdM.git",
+    "expiration": "2026-08-16T10:46:56.537Z",
+    "token": "art_v2_x_2a944a9800b9f40e3b2aa730d097e356fcd8e0fe?expires=1786877216",
+    "backend": "GIT_BACKEND_ARTIFACTS"
+  },
+  "name": "personal-portfolio",
+  "path": "/home/ubuntu/personal-portfolio",
+  "port": 3000,
+  "secrets": {
+    "BUILT_IN_FORGE_API_KEY": "3S7RkNoApgSsfBxjEh8tJj",
+    "BUILT_IN_FORGE_API_URL": "https://forge.manus.ai",
+    "JWT_SECRET": "MrEJTy9RwpjknD78YNHpuJ",
+    "OAUTH_SERVER_URL": "https://api.manus.im",
+    "OWNER_NAME": "果典 王",
+    "OWNER_OPEN_ID": "WmEmxDEZEQKyMHv7jJHUSW",
+    "VITE_ANALYTICS_ENDPOINT": "https://manus-analytics.com",
+    "VITE_ANALYTICS_WEBSITE_ID": "55da7ac1-9346-4170-b19b-ebfd4d6561d4",
+    "VITE_APP_ID": "Vejje3J8cVRUFYDzCxwUdM",
+    "VITE_APP_LOGO": "",
+    "VITE_APP_TITLE": "个人网站",
+    "VITE_FRONTEND_FORGE_API_KEY": "gcgzRyrakmnfWwfvg9ba9d",
+    "VITE_FRONTEND_FORGE_API_URL": "https://forge.manus.ai",
+    "VITE_OAUTH_PORTAL_URL": "https://manus.im"
+  },
+  "template_id": "web-static",
+  "test_command": "pnpm test"
+}
