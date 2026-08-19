@@ -36,17 +36,8 @@ import { getBoundedPptPageIndex, initializePptPageLoadStates, type PptPageLoadSt
 import { getRestoredReadingPosition } from "@/lib/readingPosition";
 import { readingRooms } from "@/lib/readingRooms";
 import { featuredWork } from "@/lib/featuredWork";
-
-const staticMediaAliases: Record<string, string> = {
-  "ai-trainer-advanced-wang-guodian_3965d69c.webp": "ai-trainer-advanced-wang-guodian.webp",
-  "ai-trainer-junior-wang-guodian_fab50756.webp": "ai-trainer-junior-wang-guodian.webp",
-  "portfolio-mark_1782bf8b.png": "portfolio-mark.svg",
-  "straw-future-clean-cover_be7078fc.png": "straw-future-clean-cover.png",
-  "straw-future-clean_94e3813a.pdf": "straw-future-clean.pdf",
-  "straw-future-clean_95f53e3e.pptx": "straw-future-clean.pptx",
-};
-
-const staticMediaUrl = (fileName: string) => `${import.meta.env.BASE_URL}media/${staticMediaAliases[fileName] ?? fileName}`;
+import { morningMistScene } from "@/lib/morningMistScene";
+import { narrativeScenes } from "@/lib/narrativeScenes";
 
 const capabilities = [
   {
@@ -96,24 +87,39 @@ const certificates = [
     index: "CERT / 01",
     level: "人工智能训练师 · 初级",
     date: "2026 年 7 月 29 日",
-    image: staticMediaUrl("ai-trainer-junior-wang-guodian_fab50756.webp"),
+    image: "/manus-storage/ai-trainer-junior-wang-guodian_fab50756.webp",
   },
   {
     id: "advanced",
     index: "CERT / 02",
     level: "人工智能训练师 · 高级",
     date: "2026 年 8 月 1 日",
-    image: staticMediaUrl("ai-trainer-advanced-wang-guodian_3965d69c.webp"),
+    image: "/manus-storage/ai-trainer-advanced-wang-guodian_3965d69c.webp",
   },
 ];
 
 const pptPages = [
-  "page-01_c7876cbb.jpg", "page-02_67f37c6b.jpg", "page-03_ed3ad407.jpg", "page-04_46975e4d.jpg",
-  "page-05_67c1fbdc.jpg", "page-06_c96dd6af.jpg", "page-07_631d4e5b.jpg", "page-08_3af0dbac.jpg",
-  "page-09_0ea75b5c.jpg", "page-10_85ced021.jpg", "page-11_3436730f.jpg", "page-12_7bbed41c.jpg",
-  "page-13_6bc313eb.jpg", "page-14_8e2e2f19.jpg", "page-15_c475bc05.jpg", "page-16_c6f55ded.jpg",
-  "page-17_626d0c4a.jpg", "page-18_47d53169.jpg", "page-19_dcbb0364.jpg", "page-20_6810470d.jpg",
-].map(staticMediaUrl);
+  "/manus-storage/page-01_c7876cbb.jpg",
+  "/manus-storage/page-02_67f37c6b.jpg",
+  "/manus-storage/page-03_ed3ad407.jpg",
+  "/manus-storage/page-04_46975e4d.jpg",
+  "/manus-storage/page-05_67c1fbdc.jpg",
+  "/manus-storage/page-06_c96dd6af.jpg",
+  "/manus-storage/page-07_631d4e5b.jpg",
+  "/manus-storage/page-08_3af0dbac.jpg",
+  "/manus-storage/page-09_0ea75b5c.jpg",
+  "/manus-storage/page-10_85ced021.jpg",
+  "/manus-storage/page-11_3436730f.jpg",
+  "/manus-storage/page-12_7bbed41c.jpg",
+  "/manus-storage/page-13_6bc313eb.jpg",
+  "/manus-storage/page-14_8e2e2f19.jpg",
+  "/manus-storage/page-15_c475bc05.jpg",
+  "/manus-storage/page-16_c6f55ded.jpg",
+  "/manus-storage/page-17_626d0c4a.jpg",
+  "/manus-storage/page-18_47d53169.jpg",
+  "/manus-storage/page-19_dcbb0364.jpg",
+  "/manus-storage/page-20_6810470d.jpg",
+];
 
 const [tankGame, stellarGame] = gamePortfolio;
 const [herbRoom, aiRoom, editorialRoom] = readingRooms;
@@ -165,7 +171,7 @@ function SectionHeading({
   return (
     <div className="section-heading">
       <div className="section-index" aria-hidden="true">
-        <span className="section-mark"><img src={staticMediaUrl("portfolio-mark_1782bf8b.png")} alt="" /><i /></span>
+        <span className="section-mark"><img src="/manus-storage/portfolio-mark_1782bf8b.png" alt="" /><i /></span>
         <span>{index}</span>
         <i />
       </div>
@@ -240,9 +246,12 @@ export default function Home() {
   const [identityCardOpen, setIdentityCardOpen] = useState(false);
   const [bookTurning, setBookTurning] = useState(false);
   const [turnLeaf, setTurnLeaf] = useState<{ from: IdentityProfile; to: IdentityProfile; direction: 1 | -1 } | null>(null);
+  const [t01VideoReady, setT01VideoReady] = useState(false);
+  const [activeNarrativeScene, setActiveNarrativeScene] = useState(0);
   const directoryCloseRef = useRef<HTMLButtonElement>(null);
   const directoryTriggerRef = useRef<HTMLButtonElement>(null);
   const savedReadingPositionRef = useRef(0);
+  const t01VideoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
@@ -477,6 +486,61 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    const video = t01VideoRef.current;
+    if (!video) return;
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const desktop = window.matchMedia("(min-width: 861px)");
+
+    const syncT01Playback = () => {
+      if (reducedMotion.matches || !desktop.matches) {
+        video.pause();
+        return;
+      }
+
+      void video.play().catch(() => {
+        // A muted video normally autoplays; poster imagery remains the safe fallback.
+      });
+    };
+
+    const handleLoadedMetadata = () => {
+      setT01VideoReady(true);
+      syncT01Playback();
+    };
+
+    video.addEventListener("loadedmetadata", handleLoadedMetadata);
+    if (video.readyState >= 1) handleLoadedMetadata();
+    reducedMotion.addEventListener("change", syncT01Playback);
+    desktop.addEventListener("change", syncT01Playback);
+    syncT01Playback();
+
+    return () => {
+      video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      reducedMotion.removeEventListener("change", syncT01Playback);
+      desktop.removeEventListener("change", syncT01Playback);
+    };
+  }, []);
+
+  useEffect(() => {
+    const stageAnchors = Array.from(document.querySelectorAll<HTMLElement>("[data-narrative-scene]"));
+    if (stageAnchors.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const active = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((first, second) => second.intersectionRatio - first.intersectionRatio)[0];
+        const nextScene = active?.target.getAttribute("data-narrative-scene");
+        if (nextScene) setActiveNarrativeScene(Number(nextScene));
+      },
+      { rootMargin: "-28% 0px -38% 0px", threshold: [0.12, 0.35, 0.6] },
+    );
+
+    stageAnchors.forEach((anchor) => observer.observe(anchor));
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches || sessionStorage.getItem("force-reduced-motion") === "true";
     document.documentElement.dataset.reducedMotion = reduceMotion ? "true" : "false";
     const revealTargets = Array.from(document.querySelectorAll<HTMLElement>("[data-scroll-reveal]"));
@@ -615,7 +679,7 @@ export default function Home() {
     <div className="archive-page">
       <header className="site-header">
         <a className="brand" href="#top" aria-label="返回王果典个人档案首页">
-          <span className="brand-mark"><img src={staticMediaUrl("portfolio-mark_1782bf8b.png")} alt="" /><i /></span>
+          <span className="brand-mark"><img src="/manus-storage/portfolio-mark_1782bf8b.png" alt="" /><i /></span>
           <span className="wordmark"><b>WANG</b><i>/</i><b>GUODIAN</b><em>PERSONAL ARCHIVE · 2026</em></span>
         </a>
         <button ref={directoryTriggerRef} className="header-directory" type="button" onClick={openDirectory} aria-haspopup="dialog" aria-expanded={directoryOpen} data-cursor="section">
@@ -626,6 +690,25 @@ export default function Home() {
         </a>
         <div className="site-progress" aria-hidden="true"><span style={{ transform: `scaleX(${scrollProgress})` }} /></div>
       </header>
+
+      <div className="narrative-background" aria-hidden="true">
+        {[morningMistScene.forestSrc, ...narrativeScenes.map((scene) => scene.imageSrc)].map((src, index) => (
+          <img key={src} className={`narrative-background-image ${activeNarrativeScene === index ? "is-active" : ""}`} src={src} alt="" />
+        ))}
+        <video
+          ref={t01VideoRef}
+          className={`t01-motion-video narrative-background-video ${t01VideoReady && activeNarrativeScene === 0 ? "is-ready" : ""}`}
+          src={morningMistScene.motionVideoSrc}
+          poster={morningMistScene.forestSrc}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          tabIndex={-1}
+        />
+        <span className="narrative-background-paper" />
+      </div>
 
       <aside className="archive-index" aria-label="章节定位">
         <span className="archive-index-title">ARCHIVE / NAV</span>
@@ -674,12 +757,14 @@ export default function Home() {
       </div>
 
       <main id="top">
-        <section className="hero" aria-labelledby="hero-title">
+        <section className="hero" data-narrative-scene="0" aria-labelledby="hero-title">
           <div className="hero-rail" aria-hidden="true">
             <span>个人档案</span>
             <span>2026 — ∞</span>
           </div>
           <div className="hero-parallax-field" aria-hidden="true">
+            <i className="morning-mist-wash morning-mist-wash-back" />
+            <i className="morning-mist-wash morning-mist-wash-front" />
             <span className="hero-parallax-stamp">FIELD / 00</span>
             <i className="hero-parallax-orbit" />
             <i className="hero-parallax-rule" />
@@ -710,28 +795,13 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="hero-art">
-            <div className="hero-art-meta">
-              <span>FIELD NOTES</span>
-              <span>01 / 03</span>
-            </div>
-            <img
-              src={staticMediaUrl("portfolio-hero-editorial_b42edde5.jpg")}
-              alt="纸张、半透明描图纸和墨绿色物件组成的编辑工作台静物"
-            />
-            <div className="hero-art-annotation" aria-hidden="true">
-              <span>HERBARIUM / AI</span>
-              <b>信息整理<br />实验记录</b>
-            </div>
-            <p>以问题为起点，持续记录、拆解与实践。</p>
-          </div>
           <a className="scroll-cue" href="#profile" aria-label="滚动至个人概览">
             <span>SCROLL TO READ</span>
             <ArrowDown size={17} />
           </a>
         </section>
 
-        <section id="featured-work" className="featured-work-section scroll-reveal" data-scroll-reveal aria-labelledby="featured-work-heading">
+        <section id="featured-work" className="featured-work-section scroll-reveal" data-scroll-reveal data-narrative-scene="1" aria-labelledby="featured-work-heading">
           <div className="featured-work-heading">
             <div>
               <p className="eyebrow">SELECTED WORK / 03</p>
@@ -742,13 +812,13 @@ export default function Home() {
           <div className="featured-work-grid">
             <a className="featured-work-card featured-work-tank" href={tankGame.url} target="_blank" rel="noreferrer" data-cursor="launch" aria-label="打开 WGD 校园防线坦克大战" onPointerMove={handleWorkCardPointerMove} onPointerLeave={resetWorkCardPointer}>
               <div className="featured-work-media featured-work-media-tank" aria-hidden="true">
-                <img className="featured-work-tank-image" src={staticMediaUrl("wgd-campus-defense-start_f093aabd.webp")} alt="" />
+                <img className="featured-work-tank-image" src="/manus-storage/wgd-campus-defense-start_f093aabd.webp" alt="" />
                 <span className="featured-work-stamp">{featuredWork[0].index}</span><strong>WGD<br />DEFENSE</strong>
               </div>
               <div className="featured-work-card-body"><p>{featuredWork[0].kind}</p><h3>{featuredWork[0].title}</h3><span>{featuredWork[0].summary} <ArrowUpRight size={16} /></span></div>
             </a>
             <button className="featured-work-card featured-work-ppt" type="button" onClick={openPptArchive} data-cursor="verify" aria-label="打开秸约未来 PPT 档案放映册" onPointerMove={handleWorkCardPointerMove} onPointerLeave={resetWorkCardPointer}>
-              <div className="featured-work-media"><img src={staticMediaUrl("straw-future-clean-cover_be7078fc.png")} alt="秸约未来 PPT 封面" /><span className="featured-work-pages">20<br /><small>PAGES</small></span><i aria-hidden="true" /></div>
+              <div className="featured-work-media"><img src="/manus-storage/straw-future-clean-cover_be7078fc.png" alt="秸约未来 PPT 封面" /><span className="featured-work-pages">20<br /><small>PAGES</small></span><i aria-hidden="true" /></div>
               <div className="featured-work-card-body"><p>{featuredWork[1].kind}</p><h3>{featuredWork[1].title}</h3><span>{featuredWork[1].summary} <ArrowUpRight size={16} /></span></div>
             </button>
             <a className="featured-work-card featured-work-stellar" href={stellarGame.url} target="_blank" rel="noreferrer" data-cursor="launch" aria-label="打开星际之怒飞机大战" onPointerMove={handleWorkCardPointerMove} onPointerLeave={resetWorkCardPointer}>
@@ -758,7 +828,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="reading-rooms" className="reading-room scroll-reveal" data-scroll-reveal aria-labelledby="reading-rooms-heading">
+        <section id="reading-rooms" className="reading-room scroll-reveal" data-scroll-reveal data-narrative-scene="1" aria-labelledby="reading-rooms-heading">
           <div className="reading-room-heading">
             <div><p className="eyebrow">A / 00.5 · READING ROOMS</p><h2 id="reading-rooms-heading">从一份档案，<br /><em>进入三条正在展开的线索。</em></h2></div>
             <p>三张入口卡并不复制简历内容，而是把已有经历、作品与下一步关注的问题，整理成更适合主动探索的阅读路径。</p>
@@ -776,7 +846,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="profile" className="profile-section scroll-reveal" data-scroll-reveal aria-labelledby="profile-heading">
+        <section id="profile" className="profile-section scroll-reveal" data-scroll-reveal data-narrative-scene="2" aria-labelledby="profile-heading">
           <SectionHeading
             index="A / 01"
             eyebrow="IDENTITY INDEX"
@@ -983,9 +1053,9 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="work" className="work-section scroll-reveal" data-scroll-reveal aria-labelledby="work-heading">
+        <section id="work" className="work-section scroll-reveal" data-scroll-reveal data-narrative-scene="3" aria-labelledby="work-heading">
           <div className="work-heading">
-            <div className="work-heading-index" aria-hidden="true"><span className="section-mark"><img src={staticMediaUrl("portfolio-mark_1782bf8b.png")} alt="" /><i /></span><span>A / 06</span><b>SPECIMEN TABLE</b></div>
+            <div className="work-heading-index" aria-hidden="true"><span className="section-mark"><img src="/manus-storage/portfolio-mark_1782bf8b.png" alt="" /><i /></span><span>A / 06</span><b>SPECIMEN TABLE</b></div>
             <div>
               <p className="eyebrow">A / 06 · PORTFOLIO SPECIMEN</p>
               <h2 id="work-heading">把绿色产业化方案，<br /><em>整理成一份清晰的项目叙事。</em></h2>
@@ -994,7 +1064,7 @@ export default function Home() {
           </div>
           <button id="ppt-archive" className="ppt-project" type="button" onClick={openPptArchive} aria-label="翻阅秸约未来图片作品集" data-cursor="verify">
             <div className="ppt-project-cover">
-              <img src={staticMediaUrl("straw-future-clean-cover_be7078fc.png")} alt="秸约未来清洁版演示文稿封面：田野和麦穗背景上的项目标题" />
+              <img src="/manus-storage/straw-future-clean-cover_be7078fc.png" alt="秸约未来清洁版演示文稿封面：田野和麦穗背景上的项目标题" />
               <span className="ppt-project-pages">20<br /><small>PAGES</small></span>
               <span className="ppt-project-crop" aria-hidden="true" />
             </div>
@@ -1009,7 +1079,7 @@ export default function Home() {
           </button>
           <div className="work-meta">
             <span><Sparkles size={15} /> A / 06 · PROJECT FILE · 20 PAGES · PDF READY</span>
-            <a href={staticMediaUrl("straw-future-clean_95f53e3e.pptx")} download>下载清洁版 PPTX <Download size={15} /></a>
+            <a href="/manus-storage/straw-future-clean_95f53e3e.pptx" download>下载清洁版 PPTX <Download size={15} /></a>
           </div>
 
           <div id="ai-work" className="game-collection" aria-label="AI 编程网页游戏作品">
@@ -1067,7 +1137,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="contact" className="contact-section scroll-reveal" data-scroll-reveal aria-labelledby="contact-heading">
+        <section id="contact" className="contact-section scroll-reveal" data-scroll-reveal data-narrative-scene="4" aria-labelledby="contact-heading">
           <div className="contact-topline"><span>A / 07</span><i /><span>CONTACT</span></div>
           <div className="contact-ledger" aria-hidden="true"><span>CORRESPONDENCE FILE</span><i /><span>REPLY CHANNELS / 03</span></div>
           <div className="contact-layout">
@@ -1083,6 +1153,7 @@ export default function Home() {
             </div>
           </div>
         </section>
+
       </main>
 
       <div className={`page-turn ${pageTurning ? "is-active" : ""}`} aria-hidden="true"><span className="page-turn-left" /><span className="page-turn-right" /><b>WANG GUODIAN / ARCHIVE</b></div>
@@ -1141,8 +1212,8 @@ export default function Home() {
           <div className="certificate-dialog-foot ppt-dialog-foot">
             <p>文件格式：PPTX / PDF · 共 20 页 · 图片按需加载</p>
             <div className="ppt-source-actions">
-              <a className="ppt-pdf-link" href={staticMediaUrl("straw-future-clean_94e3813a.pdf")} target="_blank" rel="noreferrer"><FileText size={16} /> 查看 PDF</a>
-              <a className="ppt-download" href={staticMediaUrl("straw-future-clean_95f53e3e.pptx")} download><Download size={16} /> 下载 PPTX</a>
+              <a className="ppt-pdf-link" href="/manus-storage/straw-future-clean_94e3813a.pdf" target="_blank" rel="noreferrer"><FileText size={16} /> 查看 PDF</a>
+              <a className="ppt-download" href="/manus-storage/straw-future-clean_95f53e3e.pptx" download><Download size={16} /> 下载 PPTX</a>
             </div>
           </div>
           {pptZoomOpen ? (
@@ -1193,7 +1264,7 @@ export default function Home() {
       </Dialog>
 
       <footer className="site-footer">
-        <div><span className="brand-mark"><img src={staticMediaUrl("portfolio-mark_1782bf8b.png")} alt="" /><i /></span> <span>WANG GUODIAN / 2026</span></div>
+        <div><span className="brand-mark"><img src="/manus-storage/portfolio-mark_1782bf8b.png" alt="" /><i /></span> <span>WANG GUODIAN / 2026</span></div>
         <p>持续学习，持续整理，持续向前。</p>
         <a href="#top">BACK TO TOP <ArrowUpRight size={14} /></a>
       </footer>
