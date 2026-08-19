@@ -1,3 +1,5 @@
+const localMedia = (fileName: string) => `${import.meta.env.BASE_URL}media/${fileName}`;
+
 export const narrativeScenes = [
   {
     id: "field-collection",
@@ -7,7 +9,7 @@ export const narrativeScenes = [
     description: "从一株草药、一次观察开始，把正在学习的内容整理成可以继续追问的线索。",
     actionLabel: "进入三条学习线索",
     target: "#reading-rooms",
-    imageSrc: "/manus-storage/scene-02-forest-collection_33168548.jpg",
+    imageSrc: localMedia("scene-02-forest-collection.jpg"),
     imageAlt: "药草研究员在晨雾山林中蹲下，记录并采集药草样本",
   },
   {
@@ -18,7 +20,7 @@ export const narrativeScenes = [
     description: "在窗边、药瓶与笔记之间，让中药学、AI、代码和实践逐渐形成自己的结构。",
     actionLabel: "翻开身份与能力档案",
     target: "#profile",
-    imageSrc: "/manus-storage/scene-03-cabin-archive_0ef11be4.jpg",
+    imageSrc: localMedia("scene-03-cabin-archive.jpg"),
     imageAlt: "药草研究员在林屋书桌前整理笔记与植物标本",
   },
   {
@@ -29,7 +31,7 @@ export const narrativeScenes = [
     description: "从资料桌上的推演到网页里的实际操作，作品是把问题带进真实场景的一种方式。",
     actionLabel: "查看作品样本",
     target: "#work",
-    imageSrc: "/manus-storage/scene-04-night-tactics_81f015d0.jpg",
+    imageSrc: localMedia("scene-04-night-tactics.jpg"),
     motionVideoSrc: "/manus-storage/t04-night-tactics-only_dbb32797.mp4",
     imageAlt: "月夜山林中，药草研究员在油灯旁查看笔记与战术模型",
   },
@@ -41,7 +43,7 @@ export const narrativeScenes = [
     description: "持续学习、持续整理、持续向前。愿每一次记录都能成为下一次实践的起点。",
     actionLabel: "写一封信给我",
     target: "#contact",
-    imageSrc: "/manus-storage/scene-05-lamp-archive_b7585421.jpg",
+    imageSrc: localMedia("scene-05-lamp-archive.jpg"),
     motionVideoSrc: "/manus-storage/t05-lamp-archive-final_8dfb0e90.mp4",
     imageAlt: "药草研究员在温暖油灯旁整理标本袋，窗外是傍晚森林",
   },
