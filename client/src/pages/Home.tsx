@@ -39,6 +39,8 @@ import { featuredWork } from "@/lib/featuredWork";
 import { morningMistScene } from "@/lib/morningMistScene";
 import { narrativeScenes } from "@/lib/narrativeScenes";
 
+const localMedia = (fileName: string) => `${import.meta.env.BASE_URL}media/${fileName}`;
+
 const capabilities = [
   {
     index: "01",
@@ -812,13 +814,13 @@ export default function Home() {
           <div className="featured-work-grid">
             <a className="featured-work-card featured-work-tank" href={tankGame.url} target="_blank" rel="noreferrer" data-cursor="launch" aria-label="打开 WGD 校园防线坦克大战" onPointerMove={handleWorkCardPointerMove} onPointerLeave={resetWorkCardPointer}>
               <div className="featured-work-media featured-work-media-tank" aria-hidden="true">
-                <img className="featured-work-tank-image" src="/manus-storage/wgd-campus-defense-start_f093aabd.webp" alt="" />
+                <img className="featured-work-tank-image" src={localMedia("wgd-campus-defense-start_f093aabd.webp")} alt="" />
                 <span className="featured-work-stamp">{featuredWork[0].index}</span><strong>WGD<br />DEFENSE</strong>
               </div>
               <div className="featured-work-card-body"><p>{featuredWork[0].kind}</p><h3>{featuredWork[0].title}</h3><span>{featuredWork[0].summary} <ArrowUpRight size={16} /></span></div>
             </a>
             <button className="featured-work-card featured-work-ppt" type="button" onClick={openPptArchive} data-cursor="verify" aria-label="打开秸约未来 PPT 档案放映册" onPointerMove={handleWorkCardPointerMove} onPointerLeave={resetWorkCardPointer}>
-              <div className="featured-work-media"><img src="/manus-storage/straw-future-clean-cover_be7078fc.png" alt="秸约未来 PPT 封面" /><span className="featured-work-pages">20<br /><small>PAGES</small></span><i aria-hidden="true" /></div>
+              <div className="featured-work-media"><img src={localMedia("straw-future-clean-cover_be7078fc.png")} alt="秸约未来 PPT 封面" /><span className="featured-work-pages">20<br /><small>PAGES</small></span><i aria-hidden="true" /></div>
               <div className="featured-work-card-body"><p>{featuredWork[1].kind}</p><h3>{featuredWork[1].title}</h3><span>{featuredWork[1].summary} <ArrowUpRight size={16} /></span></div>
             </button>
             <a className="featured-work-card featured-work-stellar" href={stellarGame.url} target="_blank" rel="noreferrer" data-cursor="launch" aria-label="打开星际之怒飞机大战" onPointerMove={handleWorkCardPointerMove} onPointerLeave={resetWorkCardPointer}>
@@ -1064,7 +1066,7 @@ export default function Home() {
           </div>
           <button id="ppt-archive" className="ppt-project" type="button" onClick={openPptArchive} aria-label="翻阅秸约未来图片作品集" data-cursor="verify">
             <div className="ppt-project-cover">
-              <img src="/manus-storage/straw-future-clean-cover_be7078fc.png" alt="秸约未来清洁版演示文稿封面：田野和麦穗背景上的项目标题" />
+              <img src={localMedia("straw-future-clean-cover_be7078fc.png")} alt="秸约未来清洁版演示文稿封面：田野和麦穗背景上的项目标题" />
               <span className="ppt-project-pages">20<br /><small>PAGES</small></span>
               <span className="ppt-project-crop" aria-hidden="true" />
             </div>
