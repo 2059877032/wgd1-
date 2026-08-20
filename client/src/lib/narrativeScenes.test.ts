@@ -11,9 +11,9 @@ describe("narrativeScenes", () => {
     ]);
   });
 
-  it("keeps every scene bound to a storage asset and an existing archive destination", () => {
+  it("keeps every scene bound to a GitHub Pages-ready local asset and an existing archive destination", () => {
     narrativeScenes.forEach((scene) => {
-      expect(scene.imageSrc).toMatch(/^\/manus-storage\/scene-0[2-5]-/);
+      expect(scene.imageSrc).toMatch(/\/media\/scene-0[2-5]-.*\.jpg$/);
       expect(scene.target).toMatch(/^#(reading-rooms|profile|work|contact)$/);
       expect(scene.imageAlt.length).toBeGreaterThan(12);
     });

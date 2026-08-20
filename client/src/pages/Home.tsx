@@ -100,28 +100,16 @@ const certificates = [
   },
 ];
 
-const pptPages = [
-  "/manus-storage/page-01_c7876cbb.jpg",
-  "/manus-storage/page-02_67f37c6b.jpg",
-  "/manus-storage/page-03_ed3ad407.jpg",
-  "/manus-storage/page-04_46975e4d.jpg",
-  "/manus-storage/page-05_67c1fbdc.jpg",
-  "/manus-storage/page-06_c96dd6af.jpg",
-  "/manus-storage/page-07_631d4e5b.jpg",
-  "/manus-storage/page-08_3af0dbac.jpg",
-  "/manus-storage/page-09_0ea75b5c.jpg",
-  "/manus-storage/page-10_85ced021.jpg",
-  "/manus-storage/page-11_3436730f.jpg",
-  "/manus-storage/page-12_7bbed41c.jpg",
-  "/manus-storage/page-13_6bc313eb.jpg",
-  "/manus-storage/page-14_8e2e2f19.jpg",
-  "/manus-storage/page-15_c475bc05.jpg",
-  "/manus-storage/page-16_c6f55ded.jpg",
-  "/manus-storage/page-17_626d0c4a.jpg",
-  "/manus-storage/page-18_47d53169.jpg",
-  "/manus-storage/page-19_dcbb0364.jpg",
-  "/manus-storage/page-20_6810470d.jpg",
-];
+export const pptPages = [
+  "page-01_c7876cbb.jpg", "page-02_67f37c6b.jpg", "page-03_ed3ad407.jpg", "page-04_46975e4d.jpg",
+  "page-05_67f37c6b.jpg", "page-06_c96dd6af.jpg", "page-07_631d4e5b.jpg", "page-08_3af0dbac.jpg",
+  "page-09_0ea75b5c.jpg", "page-10_85ced021.jpg", "page-11_3436730f.jpg", "page-12_7bbed41c.jpg",
+  "page-13_6bc313eb.jpg", "page-14_8e2e2f19.jpg", "page-15_c475bc05.jpg", "page-16_c6f55ded.jpg",
+  "page-17_626d0c4a.jpg", "page-18_47d53169.jpg", "page-19_dcbb0364.jpg", "page-20_6810470d.jpg",
+].map((fileName) => localMedia(`straw-future/${fileName}`));
+
+const pptPdfSrc = localMedia("straw-future/straw-future-clean.pdf");
+const pptPptxSrc = localMedia("straw-future/straw-future-clean.pptx");
 
 const [tankGame, stellarGame] = gamePortfolio;
 const [herbRoom, aiRoom, editorialRoom] = readingRooms;
@@ -1081,7 +1069,7 @@ export default function Home() {
           </button>
           <div className="work-meta">
             <span><Sparkles size={15} /> A / 06 · PROJECT FILE · 20 PAGES · PDF READY</span>
-            <a href="/manus-storage/straw-future-clean_95f53e3e.pptx" download>下载清洁版 PPTX <Download size={15} /></a>
+            <a href={pptPptxSrc} download>下载清洁版 PPTX <Download size={15} /></a>
           </div>
 
           <div id="ai-work" className="game-collection" aria-label="AI 编程网页游戏作品">
@@ -1214,8 +1202,8 @@ export default function Home() {
           <div className="certificate-dialog-foot ppt-dialog-foot">
             <p>文件格式：PPTX / PDF · 共 20 页 · 图片按需加载</p>
             <div className="ppt-source-actions">
-              <a className="ppt-pdf-link" href="/manus-storage/straw-future-clean_94e3813a.pdf" target="_blank" rel="noreferrer"><FileText size={16} /> 查看 PDF</a>
-              <a className="ppt-download" href="/manus-storage/straw-future-clean_95f53e3e.pptx" download><Download size={16} /> 下载 PPTX</a>
+              <a className="ppt-pdf-link" href={pptPdfSrc} target="_blank" rel="noreferrer"><FileText size={16} /> 查看 PDF</a>
+              <a className="ppt-download" href={pptPptxSrc} download><Download size={16} /> 下载 PPTX</a>
             </div>
           </div>
           {pptZoomOpen ? (
